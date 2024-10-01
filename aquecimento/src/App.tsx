@@ -1,15 +1,34 @@
 import BlocoTexto from "./components/BlocoTexto";
 import styles from "./App.module.css";
+import css from "./assets/img/css.png";
+import html from "./assets/img/html.png";
+import typescript from "./assets/img/typescript.png";
 
 const App = () => {
   return (
     <>
-      <h1 className={styles.titulo}>Aquecimento com React</h1>
-      <p className={styles.paragrafo}>
-        Primeiro projeto utilizando React com TypeScript e Vite.
-      </p>
+      <BlocoTexto
+        titulo="Primeiro bloco"
+        paragrafo="Este é o texto do primeiro bloco"
+      />
 
-      <BlocoTexto />
+      <BlocoTexto
+        titulo="CSS"
+        paragrafo="Linguagem de estilização de elementos web."
+        thumb={css}
+      />
+
+      <BlocoTexto
+        titulo="HTML"
+        paragrafo="Linguagem de estruturação de páginas web."
+        thumb={html}
+      />
+
+      <BlocoTexto
+        titulo="TypeScript"
+        paragrafo="Linguagem de programação voltada tanto para o frontend quanto ao backend."
+        thumb={typescript}
+      />
     </>
   );
 };

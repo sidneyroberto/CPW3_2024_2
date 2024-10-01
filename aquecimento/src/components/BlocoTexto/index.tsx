@@ -1,15 +1,18 @@
 import styles from "./styles.module.css";
+import noImage from "../../assets/img/noimage.png";
 
-const BlocoTexto = () => {
+type Props = {
+  titulo: string;
+  paragrafo: string;
+  thumb?: string;
+};
+
+const BlocoTexto = ({ paragrafo, titulo, thumb }: Props) => {
   return (
-    <div>
-      <h1 className={styles.titulo}>Um bloco de texto</h1>
-      <p className={styles.paragrafo}>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis cum,
-        harum nisi consequatur iure, laborum ipsa voluptatum explicabo
-        blanditiis porro iste modi debitis qui officia nulla dolore magni eos
-        quia.
-      </p>
+    <div className={styles.blocoTexto}>
+      <img className={styles.thumb} src={thumb || noImage} alt={titulo} />
+      <h1 className={styles.titulo}>{titulo}</h1>
+      <p className={styles.paragrafo}>{paragrafo}</p>
     </div>
   );
 };
