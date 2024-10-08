@@ -1,7 +1,9 @@
+import Header from "../../components/Header";
+
 const Home = () => {
   return (
     <div>
-      <a href="/contact">Contato</a>
+      <Header title="Início" />
     </div>
   );
 };
