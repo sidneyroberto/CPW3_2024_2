@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
 import { Contact } from "../../models/Contact";
+import ContactCard from "../../components/ContactCard";
 
 const Home = () => {
   /**
@@ -96,8 +97,13 @@ const Home = () => {
         <input type="submit" value="Salvar" />
       </form>
 
-      {contacts.length > 0 &&
-        contacts.map((c, index) => <p key={index}>{c.name}</p>)}
+      {contacts.length > 0 && (
+        <div className={styles.contacts}>
+          {contacts.map((c, index) => (
+            <ContactCard key={index} contact={c} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
