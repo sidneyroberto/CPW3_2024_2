@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+import styles from "./styles.module.css";
 import Header from "../../components/Header";
 import { Contact } from "../../models/Contact";
 
@@ -41,7 +43,7 @@ const Home = () => {
     <div>
       <Header title="Início" />
 
-      <form onSubmit={saveContact}>
+      <form className={styles.contactForm} onSubmit={saveContact}>
         <label htmlFor="name">Nome*:</label>
         <input
           type="text"
