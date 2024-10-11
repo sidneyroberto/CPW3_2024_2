@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useMask } from "@react-input/mask";
+import EmailValidator from "email-validator";
 
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
@@ -40,6 +42,27 @@ const Home = () => {
     setAddress("");
   };
 
+  const phoneRef = useMask({
+    mask: "(__) _____-____",
+    replacement: { _: /\d/ },
+  });
+
+  const areInputsInvalid = () => {
+    if (name.length === 0) {
+      return true;
+    }
+
+    if (!EmailValidator.validate(email)) {
+      return true;
+    }
+
+    if (phone.match(/^\(\d{2}\)\s\d{5}-\d{4}$/) === null) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div>
       <Header title="Início" />
@@ -62,6 +85,8 @@ const Home = () => {
 
         <label htmlFor="phone">Telefone*:</label>
         <input
+          ref={phoneRef}
+          placeholder="(__) _____-____"
           type="tel"
           name="phone"
           value={phone}
@@ -94,7 +119,7 @@ const Home = () => {
           onChange={(e) => setBirthday(e.target.value)}
         />
 
-        <input type="submit" value="Salvar" />
+        <input type="submit" value="Salvar" disabled={areInputsInvalid()} />
       </form>
 
       {contacts.length > 0 && (

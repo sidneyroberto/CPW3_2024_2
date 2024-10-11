@@ -51,6 +51,10 @@
   cursor: pointer;
 }
 
+.contactForm input[type="submit"]:disabled {
+  background-color: #ccc;
+}
+
 .contacts {
   display: flex;
   flex-direction: column;
