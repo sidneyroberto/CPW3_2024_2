@@ -12,24 +12,25 @@
 }
 
 .btnLogin {
-  background-color: #fbbf24;
+  background-color: #fef2f2;
   padding: 16px;
   display: flex;
   align-items: center;
   border-radius: 10px;
   gap: 16px;
+  cursor: pointer;
 }
 
 .btnLogin:focus {
-  outline: 16px solid #94a3b8;
+  outline: 5px solid #94a3b8;
 }
 
 .btnLogin img {
-  width: 32px;
+  width: 28px;
 }
 
 .btnLogin span {
   color: #000;
   font-family: "bold";
-  font-size: 28px;
+  font-size: 22px;
 }
