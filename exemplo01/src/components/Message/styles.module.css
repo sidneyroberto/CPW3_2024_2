@@ -1,7 +1,9 @@
 .container {
   padding: 10px 0;
-  width: 60%;
+  width: 40%;
   margin: auto;
+  border-radius: 10px;
+  text-align: center;
 }
 
 .container span {
@@ -12,4 +14,12 @@
 
 .success {
   background-color: #16a34a;
+}
+
+.warning {
+  background-color: #f59e0b;
+}
+
+.error {
+  background-color: #dc2626;
 }

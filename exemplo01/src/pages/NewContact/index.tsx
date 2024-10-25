@@ -7,6 +7,8 @@ import Header from "../../components/Header";
 import { Contact } from "../../models/Contact";
 import { UserContext } from "../../context/UserContext";
 import { ContactService } from "../../services/ContactService";
+import { Severity } from "../../enums/Severity";
+import Message from "../../components/Message";
 
 const NewContact = () => {
   /**
@@ -25,6 +27,8 @@ const NewContact = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [responseSeverity, setResponseSeverity] = useState(Severity.SUCCESS);
+  const [showResponseMessage, shouldShowResponseMessage] = useState(false);
 
   const ownerEmail = useContext(UserContext).email;
 
@@ -33,18 +37,37 @@ const NewContact = () => {
   const saveContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const contact = new Contact({ name, phone, email, ownerEmail });
-    contact.address = address || undefined;
-    contact.birthday = birthday ? new Date(birthday) : undefined;
+    shouldShowResponseMessage(false);
 
-    await service.save(contact);
+    const existingContact = await service.findByOwnerEmailAndContactEmail(
+      ownerEmail,
+      email
+    );
 
-    // Utilizando o spread operator
-    setName("");
-    setPhone("");
-    setEmail("");
-    setBirthday("");
-    setAddress("");
+    if (!existingContact) {
+      const contact = new Contact({ name, phone, email, ownerEmail });
+      contact.address = address || undefined;
+      contact.birthday = birthday ? new Date(birthday) : undefined;
+
+      try {
+        await service.save(contact);
+        setResponseSeverity(Severity.SUCCESS);
+      } catch (err) {
+        console.log(err);
+        setResponseSeverity(Severity.ERROR);
+      }
+
+      // Utilizando o spread operator
+      setName("");
+      setPhone("");
+      setEmail("");
+      setBirthday("");
+      setAddress("");
+    } else {
+      setResponseSeverity(Severity.WARNING);
+    }
+
+    shouldShowResponseMessage(true);
   };
 
   const phoneRef = useMask({
@@ -126,6 +149,21 @@ const NewContact = () => {
 
         <input type="submit" value="Salvar" disabled={areInputsInvalid()} />
       </form>
+
+      {showResponseMessage && (
+        <Message
+          severity={responseSeverity}
+          message={(() => {
+            if (responseSeverity === Severity.SUCCESS) {
+              return "Contato salvo com sucesso!";
+            } else if (responseSeverity === Severity.WARNING) {
+              return "Já existe um contato com este e-mail.";
+            }
+
+            return "Ocorreu um erro ao tentar salvar o contato.";
+          })()}
+        />
+      )}
     </div>
   );
 };
