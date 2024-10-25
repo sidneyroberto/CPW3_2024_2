@@ -1,0 +1,15 @@
+.container {
+  padding: 10px 0;
+  width: 60%;
+  margin: auto;
+}
+
+.container span {
+  color: #fff;
+  font-family: "bold";
+  font-size: 24px;
+}
+
+.success {
+  background-color: #16a34a;
+}
