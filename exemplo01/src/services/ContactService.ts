@@ -1,4 +1,13 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
 import { Contact, contactConverter } from "../models/Contact";
 import { store } from "../config/firebase";
@@ -29,6 +38,22 @@ export class ContactService {
 
     const snapshot = await getDoc(ref);
     return snapshot.data();
+  }
+
+  async findAllByOwner(ownerEmail: string) {
+    const ref = collection(store, FirebaseContainer.CONTACTS_COLLECTION_NAME);
+    const q = query(
+      ref,
+      where("ownerEmail", "==", ownerEmail),
+      orderBy("name")
+    );
+
+    const snapshot = await getDocs(q);
+
+    const contacts: Contact[] = [];
+    snapshot.forEach((doc) => contacts.push(new Contact(doc.data())));
+
+    return contacts;
   }
 
   private _generateId(ownerEmail: string, contactEmail: string) {
