@@ -1,6 +1,9 @@
 import styles from "./styles.module.css";
 import { Contact } from "../../models/Contact";
 import noimage from "../../assets/img/noimage.png";
+import pencil from "../../assets/img/pencil.png";
+import trash from "../../assets/img/trash.png";
+import { Link } from "react-router-dom";
 
 type Props = {
   contact: Contact;
@@ -44,6 +47,19 @@ const ContactCard = ({ contact }: Props) => {
             </span>
           </div>
         )}
+      </div>
+
+      <div className={styles.actions}>
+        <Link
+          className={`${styles.actionButton} ${styles.editButton}`}
+          to="/newcontact"
+        >
+          <img src={pencil} alt="Editar dados do contato" />
+        </Link>
+
+        <button className={`${styles.actionButton} ${styles.deleteButton}`}>
+          <img src={trash} alt="Remover contato" />
+        </button>
       </div>
     </div>
   );
