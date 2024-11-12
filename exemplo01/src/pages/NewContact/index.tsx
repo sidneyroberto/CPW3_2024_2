@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useMask } from "@react-input/mask";
 import EmailValidator from "email-validator";
+import { useLocation } from "react-router-dom";
 
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
@@ -10,7 +11,16 @@ import { ContactService } from "../../services/ContactService";
 import { Severity } from "../../enums/Severity";
 import Message from "../../components/Message";
 
+type Location = {
+  state: {
+    contact: Contact;
+  };
+};
+
 const NewContact = () => {
+  const location: Location = useLocation();
+  const contact = location.state.contact;
+
   /**
    * State (estado do componente)
     Stateful component -> É um componente que manipula dados em seu state
@@ -22,10 +32,12 @@ const NewContact = () => {
    * useState -> hook do React para criar uma nova propriedade
    * dentro do state do componente
    */
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [name, setName] = useState(contact?.name ? contact.name : "");
+  const [phone, setPhone] = useState(contact?.phone ? contact.phone : "");
+  const [email, setEmail] = useState(contact?.email ? contact.email : "");
+  const [address, setAddress] = useState(
+    contact?.address ? contact.address : ""
+  );
   const [birthday, setBirthday] = useState("");
   const [responseSeverity, setResponseSeverity] = useState(Severity.SUCCESS);
   const [showResponseMessage, shouldShowResponseMessage] = useState(false);

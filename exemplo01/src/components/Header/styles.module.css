@@ -35,6 +35,10 @@
   font-size: 16px;
 }
 
+.btnNewContact img {
+  display: none;
+}
+
 .thumb {
   width: 36px;
   border-radius: 50%;
@@ -45,4 +49,23 @@
   width: 24px;
   filter: invert(1);
   cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    padding: 10px;
+  }
+
+  .btnNewContact {
+    padding: 7px;
+  }
+
+  .btnNewContact span {
+    display: none;
+  }
+
+  .btnNewContact img {
+    display: inline;
+    width: 24px;
+  }
 }

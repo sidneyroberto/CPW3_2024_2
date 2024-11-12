@@ -53,6 +53,7 @@ const ContactCard = ({ contact }: Props) => {
         <Link
           className={`${styles.actionButton} ${styles.editButton}`}
           to="/newcontact"
+          state={{ contact }}
         >
           <img src={pencil} alt="Editar dados do contato" />
         </Link>

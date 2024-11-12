@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 import logout from "../../assets/img/logout.png";
 import back from "../../assets/img/back.png";
+import newContact from "../../assets/img/new.png";
 import { UserContext } from "../../context/UserContext";
 
 type Props = {
@@ -25,6 +26,7 @@ const Header = ({ title, backPage }: Props) => {
 
       <Link to="/newcontact" className={styles.btnNewContact}>
         <span>Novo contato</span>
+        <img src={newContact} alt="Novo contato" />
       </Link>
 
       <img src={photoURL} className={styles.thumb} alt={name} />

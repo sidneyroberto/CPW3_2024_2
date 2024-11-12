@@ -9,7 +9,7 @@
 .container span {
   color: #fff;
   font-family: "bold";
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .success {
@@ -22,4 +22,11 @@
 
 .error {
   background-color: #dc2626;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 80%;
+    box-sizing: border-box;
+  }
 }

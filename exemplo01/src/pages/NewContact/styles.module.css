@@ -61,3 +61,10 @@
   align-items: center;
   gap: 10px;
 }
+
+@media screen and (max-width: 600px) {
+  .contactForm {
+    width: 80%;
+    box-sizing: border-box;
+  }
+}
