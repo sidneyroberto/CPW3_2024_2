@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useMask } from "@react-input/mask";
 import EmailValidator from "email-validator";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
 
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
@@ -19,7 +20,7 @@ type Location = {
 
 const NewContact = () => {
   const location: Location = useLocation();
-  const contact = location.state.contact;
+  const contact = location?.state?.contact;
 
   /**
    * State (estado do componente)
@@ -38,7 +39,9 @@ const NewContact = () => {
   const [address, setAddress] = useState(
     contact?.address ? contact.address : ""
   );
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState(
+    contact?.birthday ? moment(contact.birthday).format("YYYY-MM-DD") : ""
+  );
   const [responseSeverity, setResponseSeverity] = useState(Severity.SUCCESS);
   const [showResponseMessage, shouldShowResponseMessage] = useState(false);
 
@@ -46,39 +49,49 @@ const NewContact = () => {
 
   const service = new ContactService();
 
-  const saveContact = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const saveToDB = async () => {
+    const newContact = new Contact({ name, phone, email, ownerEmail });
+    newContact.address = address || undefined;
+    newContact.birthday = birthday ? new Date(birthday) : undefined;
 
-    shouldShowResponseMessage(false);
+    try {
+      await service.save(newContact);
+      setResponseSeverity(Severity.SUCCESS);
+    } catch (err) {
+      console.log(err);
+      setResponseSeverity(Severity.ERROR);
+    }
 
-    const existingContact = await service.findByOwnerEmailAndContactEmail(
-      ownerEmail,
-      email
-    );
-
-    if (!existingContact) {
-      const contact = new Contact({ name, phone, email, ownerEmail });
-      contact.address = address || undefined;
-      contact.birthday = birthday ? new Date(birthday) : undefined;
-
-      try {
-        await service.save(contact);
-        setResponseSeverity(Severity.SUCCESS);
-      } catch (err) {
-        console.log(err);
-        setResponseSeverity(Severity.ERROR);
-      }
-
-      // Utilizando o spread operator
+    // Se não for edição, limpa o formulário
+    if (!contact) {
       setName("");
       setPhone("");
       setEmail("");
       setBirthday("");
       setAddress("");
-    } else {
-      setResponseSeverity(Severity.WARNING);
+    }
+  };
+
+  const saveContact = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    shouldShowResponseMessage(false);
+
+    // Cao não seja edição:
+    if (!contact) {
+      const existingContact = await service.findByOwnerEmailAndContactEmail(
+        ownerEmail,
+        email
+      );
+
+      if (existingContact) {
+        setResponseSeverity(Severity.WARNING);
+        shouldShowResponseMessage(true);
+        return;
+      }
     }
 
+    await saveToDB();
     shouldShowResponseMessage(true);
   };
 
@@ -105,7 +118,10 @@ const NewContact = () => {
 
   return (
     <div>
-      <Header title="Novo contato" backPage="/home" />
+      <Header
+        title={contact ? "Editar contato" : "Novo contato"}
+        backPage="/home"
+      />
 
       <form className={styles.contactForm} onSubmit={saveContact}>
         <label htmlFor="name">Nome*:</label>
@@ -141,6 +157,7 @@ const NewContact = () => {
           value={email}
           required
           onChange={(e) => setEmail(e.target.value)}
+          disabled={contact !== undefined}
         />
 
         <label htmlFor="address">Endereço:</label>
@@ -157,6 +174,7 @@ const NewContact = () => {
           name="birthday"
           value={birthday}
           onChange={(e) => setBirthday(e.target.value)}
+          max={moment().format("YYYY-MM-DD")}
         />
 
         <input type="submit" value="Salvar" disabled={areInputsInvalid()} />
