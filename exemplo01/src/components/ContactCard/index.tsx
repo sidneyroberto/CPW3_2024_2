@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 import styles from "./styles.module.css";
 import { Contact } from "../../models/Contact";
@@ -9,10 +8,10 @@ import trash from "../../assets/img/trash.png";
 
 type Props = {
   contact: Contact;
-  openModal: () => void;
+  shouldOpenConfirmationDialog: (contact: Contact) => void;
 };
 
-const ContactCard = ({ contact, openModal }: Props) => {
+const ContactCard = ({ contact, shouldOpenConfirmationDialog }: Props) => {
   return (
     <div className={styles.contactCard}>
       <div className={styles.thumb}>
@@ -63,7 +62,7 @@ const ContactCard = ({ contact, openModal }: Props) => {
 
         <button
           className={`${styles.actionButton} ${styles.deleteButton}`}
-          onClick={() => openModal()}
+          onClick={() => shouldOpenConfirmationDialog(contact)}
         >
           <img src={trash} alt="Remover contato" />
         </button>
