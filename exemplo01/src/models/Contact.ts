@@ -13,9 +13,15 @@ export class Contact {
   address?: string;
   birthday?: Date;
   ownerEmail: string = "";
+  thumbURL?: string;
+  thumbMimetype?: string;
 
   constructor(obj: Partial<Contact>) {
     Object.assign(this, obj);
+  }
+
+  static getId(ownerEmail: string, email: string) {
+    return `${ownerEmail}|${email}`;
   }
 }
 
