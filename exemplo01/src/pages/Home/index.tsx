@@ -22,13 +22,15 @@ const Home = () => {
 
   useEffect(() => {
     (async () => {
-      isLoading(true);
-      const service = new ContactService();
-      const results = await service.findAllByOwner(email);
-      setContacts(results);
-      isLoading(false);
+      if (!openConfirmationDialog) {
+        isLoading(true);
+        const service = new ContactService();
+        const results = await service.findAllByOwner(email);
+        setContacts(results);
+        isLoading(false);
+      }
     })();
-  }, []);
+  }, [openConfirmationDialog]);
 
   const openDialog = (contact: Contact) => {
     setSelectedContact(contact);

@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -54,6 +55,17 @@ export class ContactService {
     snapshot.forEach((doc) => contacts.push(new Contact(doc.data())));
 
     return contacts;
+  }
+
+  async delete(contact: Contact) {
+    const id = this._generateId(contact.ownerEmail, contact.email);
+    const ref = doc(
+      store,
+      FirebaseContainer.CONTACTS_COLLECTION_NAME,
+      id
+    ).withConverter(contactConverter);
+
+    await deleteDoc(ref);
   }
 
   private _generateId(ownerEmail: string, contactEmail: string) {
