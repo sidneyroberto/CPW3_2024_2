@@ -51,6 +51,11 @@
   cursor: pointer;
 }
 
+.avatarPanel {
+  display: flex;
+  justify-content: center;
+}
+
 .contactForm input[type="submit"]:disabled {
   background-color: #ccc;
 }

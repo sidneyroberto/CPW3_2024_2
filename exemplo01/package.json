@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@files-ui/react": "^1.2.4",
     "@react-input/mask": "^1.2.11",
+    "axios": "^1.7.9",
     "email-validator": "^2.0.4",
     "firebase": "^10.14.1",
     "moment": "^2.30.1",

@@ -15,7 +15,7 @@ const ContactCard = ({ contact, shouldOpenConfirmationDialog }: Props) => {
   return (
     <div className={styles.contactCard}>
       <div className={styles.thumb}>
-        <img src={noimage} alt={contact.name} />
+        <img src={contact.thumbURL || noimage} alt={contact.name} />
       </div>
 
       <div className={styles.info}>

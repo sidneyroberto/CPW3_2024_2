@@ -29,7 +29,12 @@ const Header = ({ title, backPage }: Props) => {
         <img src={newContact} alt="Novo contato" />
       </Link>
 
-      <img src={photoURL} className={styles.thumb} alt={name} />
+      <img
+        src={photoURL}
+        className={styles.thumb}
+        alt={name}
+        referrerPolicy="no-referrer"
+      />
 
       <Link to="/logout">
         <img src={logout} className={styles.logout} alt="Sair" />

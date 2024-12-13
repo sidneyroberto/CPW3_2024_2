@@ -9,14 +9,16 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import axios from "axios";
 
 import { Contact, contactConverter } from "../models/Contact";
 import { store } from "../config/firebase";
 import { FirebaseContainer } from "../models/FirebaseContainer";
+import { Image } from "../types/Image";
 
 export class ContactService {
   async save(contact: Contact) {
-    const id = this._generateId(contact.ownerEmail, contact.email);
+    const id = Contact.getId(contact.ownerEmail, contact.email);
     const ref = doc(
       store,
       FirebaseContainer.CONTACTS_COLLECTION_NAME,
@@ -30,7 +32,7 @@ export class ContactService {
     ownerEmail: string,
     contactEmail: string
   ) {
-    const id = this._generateId(ownerEmail, contactEmail);
+    const id = Contact.getId(ownerEmail, contactEmail);
     const ref = doc(
       store,
       FirebaseContainer.CONTACTS_COLLECTION_NAME,
@@ -58,7 +60,7 @@ export class ContactService {
   }
 
   async delete(contact: Contact) {
-    const id = this._generateId(contact.ownerEmail, contact.email);
+    const id = Contact.getId(contact.ownerEmail, contact.email);
     const ref = doc(
       store,
       FirebaseContainer.CONTACTS_COLLECTION_NAME,
@@ -68,7 +70,38 @@ export class ContactService {
     await deleteDoc(ref);
   }
 
-  private _generateId(ownerEmail: string, contactEmail: string) {
-    return `${ownerEmail}|${contactEmail}`;
+  async uploadThumbnail(
+    thumbFile: File,
+    contactId: string
+  ): Promise<Image | undefined> {
+    const formData = new FormData();
+    formData.append("image", thumbFile);
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_IMAGE_UPLOAD_ENDPOINT}?key=${
+        import.meta.env.VITE_APP_IMAGE_API_KEY
+      }&name=${contactId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    // 200 -> OK
+    if (response.status === 200) {
+      const { data } = response.data;
+      const { image } = data;
+      const img: Image = {
+        url: image.url,
+        mimetype: image.mime,
+      };
+
+      return img;
+    }
+
+    console.log(response.data);
+    return undefined;
   }
 }

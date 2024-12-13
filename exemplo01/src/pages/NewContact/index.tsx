@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMask } from "@react-input/mask";
 import EmailValidator from "email-validator";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { Avatar } from "@files-ui/react";
 
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
@@ -42,10 +43,24 @@ const NewContact = () => {
   const [birthday, setBirthday] = useState(
     contact?.birthday ? moment(contact.birthday).format("YYYY-MM-DD") : ""
   );
+  const [thumbImage, setThumbImage] = useState<File | undefined>(undefined);
   const [responseSeverity, setResponseSeverity] = useState(Severity.SUCCESS);
   const [showResponseMessage, shouldShowResponseMessage] = useState(false);
 
   const ownerEmail = useContext(UserContext).email;
+
+  useEffect(() => {
+    if (contact && contact.thumbURL && contact.thumbMimetype) {
+      fetch(contact.thumbURL)
+        .then((res) => res.blob())
+        .then((blob) =>
+          setThumbImage(
+            new File([blob], email, { type: contact.thumbMimetype })
+          )
+        );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const service = new ContactService();
 
@@ -55,6 +70,18 @@ const NewContact = () => {
     newContact.birthday = birthday ? new Date(birthday) : undefined;
 
     try {
+      if (thumbImage) {
+        const image = await service.uploadThumbnail(
+          thumbImage,
+          Contact.getId(newContact.ownerEmail, newContact.email)
+        );
+
+        if (image) {
+          newContact.thumbURL = image.url;
+          newContact.thumbMimetype = image.mimetype;
+        }
+      }
+
       await service.save(newContact);
       setResponseSeverity(Severity.SUCCESS);
     } catch (err) {
@@ -176,6 +203,17 @@ const NewContact = () => {
           onChange={(e) => setBirthday(e.target.value)}
           max={moment().format("YYYY-MM-DD")}
         />
+
+        <div className={styles.avatarPanel}>
+          <Avatar
+            src={thumbImage}
+            changeLabel="Trocar foto"
+            emptyLabel="Escolher foto"
+            loadingLabel="Carregando..."
+            onChange={(imgSource) => setThumbImage(imgSource)}
+            accept=".jpg, .jpeg, .png"
+          />
+        </div>
 
         <input type="submit" value="Salvar" disabled={areInputsInvalid()} />
       </form>
